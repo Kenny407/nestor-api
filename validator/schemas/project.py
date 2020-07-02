@@ -82,8 +82,6 @@ PROJECT_SCHEMA = {
         "probes",
         "variables",
         "workflow",
-        "slack",
-        "jira",
     ],
     "additionalProperties": True,
 }

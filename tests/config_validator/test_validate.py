@@ -1,4 +1,4 @@
-# pylint: disable=missing-function-docstring disable=missing-module-docstring
+# pylint: disable=missing-function-docstring,missing-module-docstring
 
 import os
 from pathlib import Path
@@ -8,6 +8,7 @@ import pytest
 
 from tests.__fixtures__.example_schema import EXAMPLE_SCHEMA
 from validator.config.config import Configuration
+from validator.errors.errors import InvalidTargetPathError
 import validator.validate as config_validator
 
 
@@ -17,10 +18,10 @@ def test_build_app_path_with_env(monkeypatch):
     assert app_path == "/some/target/path/apps"
 
 
-def test_build_app_path_with_fallback(mocker):
-    mocker.patch.object(Configuration, "get_target_path", return_value="/some/target/path")
-    app_path = config_validator.build_app_path()
-    assert app_path == "/some/target/path/apps"
+def test_build_app_path_not_set(mocker):
+    mocker.patch.object(Configuration, "get_target_path", return_value=None)
+    with pytest.raises(InvalidTargetPathError):
+        config_validator.build_app_path()
 
 
 def test_build_project_conf_path_with_env(monkeypatch):
@@ -29,10 +30,10 @@ def test_build_project_conf_path_with_env(monkeypatch):
     assert project_conf_path == "/some/target/path/project.yaml"
 
 
-def test_build_project_conf_path_with_fallback(mocker):
-    mocker.patch.object(Configuration, "get_target_path", return_value="/some/target/path")
-    app_path = config_validator.build_project_conf_path()
-    assert app_path == "/some/target/path/project.yaml"
+def test_build_project_conf_path_not_set(mocker):
+    mocker.patch.object(Configuration, "get_target_path", return_value=None)
+    with pytest.raises(InvalidTargetPathError):
+        config_validator.build_project_conf_path()
 
 
 def test_validate_valid_file():
@@ -59,7 +60,7 @@ def test_validate_invalid_file():
 
 def test_validate_error_apps_dir_not_exists(mocker):
     mocker.patch.object(config_validator, "build_app_path", return_value="some/target/path")
-    expected_message = "some/target/path does not look like a valid configuration path. Verify the path exists"  # pylint disable=line-too-long
+    expected_message = "some/target/path does not look like a valid configuration path. Verify the path exists"  # pylint: disable=line-too-long
     with pytest.raises(Exception, match=expected_message):
         config_validator.validate()
 
@@ -70,7 +71,7 @@ def test_validate_error_validation_target(mocker):
     mocker.patch.object(Configuration, "get_validation_target", return_value="SOME_VALUE")
     with pytest.raises(
         Exception,  # pylint: disable=bad-continuation
-        match="There is no configuration to be validated. Be sure to define a valid NESTOR_VALIDATION_TARGET",  # pylint: disable=bad-continuation
+        match="There is no configuration to be validated. Be sure to define a valid NESTOR_VALIDATION_TARGET",  # pylint: disable=bad-continuation,line-too-long
     ):
         config_validator.validate()
 

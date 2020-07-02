@@ -61,9 +61,6 @@ confidence=
 # no Warning level messages displayed, use "--disable=all --enable=classes
 # --disable=W".
 disable=print-statement,
-        line-too-long,
-        bad-continuation,
-        missing-function-docstring,
         parameter-unpacking,
         unpacking-in-except,
         old-raise-syntax,

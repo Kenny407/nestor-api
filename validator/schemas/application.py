@@ -28,22 +28,6 @@ APPLICATION_SCHEMA = {
                 "required": ["name", "is_cronjob", "start_command"],
             },
         },
-        "databases": {
-            "type": "object",
-            "properties": {
-                "postgres": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "db": {"type": "string",},
-                            "password": {"type": "string",},
-                            "username": {"type": "string",},
-                        },
-                    },
-                },
-            },
-        },
         "scales": {"$ref": "#/definitions/scales",},
         "crons": {"$ref": "#/definitions/crons",},
         "resources": {"$ref": "#/definitions/resources",},
@@ -95,15 +79,13 @@ APPLICATION_SCHEMA = {
                     "type": "string",
                     "pattern": "^0.0[12458]|^0.12$|^0.30$|^[123]$|^default$",
                     "example": "0.12",
-                    "description": "Define the threshold for 50th percentile latency in ms."
-                    + "If above alert is raised.",
+                    "description": "Define the threshold for 50th percentile latency in ms. If above alert is raised.",  # pylint: disable=line-too-long
                 },
                 "tplWeb95thLatencyThreshold": {
                     "type": "string",
                     "pattern": "^0.0[123457]|^0.[123456]0$|^[124]$|^1.5$|^default$",
                     "example": "1.5",
-                    "description": "Define the threshold for 95th percentile latency in ms."
-                    + "If above alert is raised.",
+                    "description": "Define the threshold for 95th percentile latency in ms. If above alert is raised.",  # pylint: disable=line-too-long
                 },
                 "tplSLO": {
                     "type": "string",
@@ -170,7 +152,7 @@ APPLICATION_SCHEMA = {
                         "slack": {"type": "string",},
                         "jira": {"type": "string",},
                     },
-                    "required": ["name", "slack", "jira"],
+                    "required": ["name"],
                 },
             ],
         },
