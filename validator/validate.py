@@ -44,43 +44,35 @@ def validate():
     Raises:
         Exception: If the configuration path has not been configured.
         Exception: [description]
-
-    Returns:
-        [type]: [description]
     """
     apps_path = build_app_path()
-    project_config_file_path = build_project_conf_path()
 
     if not Path(apps_path).exists():
         raise Exception(
             f"{apps_path} does not look like a valid configuration path. Verify the path exists"
         )
 
-    validations = []
     validation_target = Configuration.get_validation_target()
 
     if validation_target == "APPLICATIONS":
         # Validate each application file
-        files_in_dir = [f for f in os.listdir() if os.path.isfile(f)]
+        files_in_dir = [
+            f for f in os.listdir(apps_path) if os.path.isfile(f) and not f.startswith(".")
+        ]
+        print("--> files in dir", files_in_dir)
         for file in files_in_dir:
             application_conf_file_path = os.path.join(apps_path, file)
-            validation_result = validate_file(
-                application_conf_file_path, SCHEMAS[validation_target]
-            )
-
+            validate_file(application_conf_file_path, SCHEMAS[validation_target])
             # pylint: disable TODO Add log if the validation was successful or not
-            validations.append(validation_result)
-    elif validation_target == "PROJECT":
-        # Validate on project.yaml
-        validation_result = validate_file(project_config_file_path, SCHEMAS[validation_target])
 
+    elif validation_target == "PROJECT":
+        # Validate project.yaml
+        project_config_file_path = build_project_conf_path()
+        validate_file(project_config_file_path, SCHEMAS[validation_target])
         # pylint: disable TODO Add log if the validation was successful or not
-        validations.append(validation_result)
+
     else:
         raise Exception(
             "There is no configuration to be validated. "
             + "Be sure to define a valid NESTOR_VALIDATION_TARGET"
         )
-
-    # pylint: disable TODO pretty print validations
-    return validations

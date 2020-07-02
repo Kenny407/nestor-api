@@ -96,14 +96,14 @@ APPLICATION_SCHEMA = {
                     "pattern": "^0.0[12458]|^0.12$|^0.30$|^[123]$|^default$",
                     "example": "0.12",
                     "description": "Define the threshold for 50th percentile latency in ms."
-                                   + "If above alert is raised.",
+                    + "If above alert is raised.",
                 },
                 "tplWeb95thLatencyThreshold": {
                     "type": "string",
                     "pattern": "^0.0[123457]|^0.[123456]0$|^[124]$|^1.5$|^default$",
                     "example": "1.5",
                     "description": "Define the threshold for 95th percentile latency in ms."
-                                   + "If above alert is raised.",
+                    + "If above alert is raised.",
                 },
                 "tplSLO": {
                     "type": "string",

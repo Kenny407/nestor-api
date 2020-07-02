@@ -13,7 +13,7 @@ format:
 	black --line-length 100 nestor_api tests validator ./**.py
 
 lint:
-	isort -rc -c nestor_api tests validator./**.py
+	isort -rc -c nestor_api tests validator ./**.py
 	black --check --line-length 100 nestor_api tests validator ./**.py
 	pylint nestor_api tests validator ./**.py
 

@@ -55,3 +55,30 @@ def test_validate_invalid_file():
 
     with pytest.raises(Exception):
         config_validator.validate_file(yaml_fixture_path, EXAMPLE_SCHEMA)
+
+
+def test_validate_error_apps_dir_not_exists(mocker):
+    mocker.patch.object(config_validator, "build_app_path", return_value="some/target/path")
+    expected_message = "some/target/path does not look like a valid configuration path. Verify the path exists"  # pylint disable=line-too-long
+    with pytest.raises(Exception, match=expected_message):
+        config_validator.validate()
+
+
+def test_validate_error_validation_target(mocker):
+    fixtures_path = Path(os.path.dirname(__file__), "..", "__fixtures__").resolve()
+    mocker.patch.object(config_validator, "build_app_path", return_value=fixtures_path)
+    mocker.patch.object(Configuration, "get_validation_target", return_value="SOME_VALUE")
+    with pytest.raises(
+        Exception,  # pylint: disable=bad-continuation
+        match="There is no configuration to be validated. Be sure to define a valid NESTOR_VALIDATION_TARGET",  # pylint: disable=bad-continuation
+    ):
+        config_validator.validate()
+
+
+def test_validate(mocker):
+    real_config_fixture_path = Path(
+        os.path.dirname(__file__), "..", "__fixtures__", "validator"
+    ).resolve()
+    mocker.patch.object(config_validator, "build_app_path", return_value=real_config_fixture_path)
+    mocker.patch.object(Configuration, "get_validation_target", return_value="APPLICATIONS")
+    config_validator.validate()
